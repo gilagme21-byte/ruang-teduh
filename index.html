@@ -3,869 +3,334 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ruang Teduh - Tempat Singgah & Penyejuk Hati</title>
+    <title>Ruang Teduh 🌸</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #f7f5f0;
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --primary: #8fa89b;
+            --primary-hover: #789284;
+            --accent: #f3e9dc;
+            --border-color: #e2e8f0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --radius: 20px;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         body {
-            background: #090d16;
-            color: #f8fafc;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Ambient Animated Glows */
-        .ambient-glow {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.4;
-            animation: pulseGlow 10s infinite alternate ease-in-out;
-        }
-
-        .glow-1 {
-            width: 350px;
-            height: 350px;
-            background: #6366f1;
-            top: -50px;
-            left: -50px;
-        }
-
-        .glow-2 {
-            width: 400px;
-            height: 400px;
-            background: #a855f7;
-            bottom: -100px;
-            right: -100px;
-            animation-delay: -5s;
-        }
-
-        @keyframes pulseGlow {
-            0% { transform: scale(1) translate(0, 0); opacity: 0.3; }
-            100% { transform: scale(1.2) translate(30px, 30px); opacity: 0.6; }
-        }
-
-        /* Canvas Particle Effect */
-        #particleCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* Header Logo */
-        header {
-            position: fixed;
-            top: 2rem;
-            z-index: 10;
-            text-align: center;
-        }
-
-        .logo {
-            font-size: 2.2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #e0e7ff 0%, #818cf8 50%, #c084fc 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 1.5px;
-            filter: drop-shadow(0 2px 10px rgba(99, 102, 241, 0.3));
-        }
-
-        /* Container Utama */
-        main {
-            width: 100%;
-            max-width: 860px;
-            padding: 6rem 1.2rem 5rem;
-            z-index: 10;
-            display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
 
-        /* Halaman Container */
+        .container {
+            width: 100%;
+            max-width: 550px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 35px 30px;
+            transition: all 0.4s ease;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+            .container {
+                padding: 24px 18px;
+                border-radius: 16px;
+            }
+        }
+
         .page {
             display: none;
-            width: 100%;
-            opacity: 0;
-            transform: translateY(20px) scale(0.98);
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: fadeIn 0.5s ease-in-out forwards;
         }
 
         .page.active {
             display: block;
-            opacity: 1;
-            transform: translateY(0) scale(1);
         }
 
-        /* Glassmorphic Card Base */
-        .glass-card {
-            background: rgba(15, 23, 42, 0.65);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 28px;
-            padding: 3.5rem 2.2rem 3rem;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(129, 140, 248, 0.6), transparent);
-        }
-
-        /* Tombol Back di Pojok Kiri Atas Kartu */
-        .btn-back-nav {
-            position: absolute;
-            top: 1.2rem;
-            left: 1.2rem;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #c7d2fe;
-            padding: 0.45rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 20;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .btn-back-nav:hover {
-            background: rgba(99, 102, 241, 0.35);
-            color: #fff;
-            border-color: #818cf8;
-            box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
-            transform: translateX(-2px);
-        }
-
-        /* HALAMAN 1: SAMBUTAN */
-        .welcome-card h1 {
-            color: #f1f5f9;
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.5px;
-        }
-
-        .welcome-card p {
-            color: #cbd5e1;
-            font-size: 1.1rem;
-            line-height: 1.85;
-            margin-bottom: 1.5rem;
-            font-weight: 300;
-        }
-
-        /* HALAMAN 2: ISIAN PERTANYAAN */
-        .quiz-title {
-            color: #c7d2fe;
-            font-size: 1.35rem;
-            font-weight: 600;
-            margin-top: 0.5rem;
-            margin-bottom: 1.8rem;
-            line-height: 1.5;
-        }
-
-        .quiz-box {
-            display: none;
-        }
-
-        .quiz-box.active {
-            display: block;
-            animation: fadeInStep 0.5s ease forwards;
-        }
-
-        @keyframes fadeInStep {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .question-text {
-            font-size: 1.15rem;
-            color: #f8fafc;
-            margin-bottom: 1.2rem;
-            line-height: 1.6;
-        }
-
-        /* Wrapper Input & Balasan */
-        .interactive-area {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            min-height: 140px;
-        }
-
-        .input-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-            width: 100%;
-            transition: opacity 0.3s ease;
-        }
-
-        .user-input {
-            width: 100%;
-            height: 90px;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(129, 140, 248, 0.4);
-            border-radius: 16px;
-            padding: 0.9rem;
-            color: #f8fafc;
-            font-size: 1rem;
-            outline: none;
-            resize: none;
-            transition: all 0.3s ease;
-        }
-
-        .user-input:focus {
-            border-color: #818cf8;
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
-            background: rgba(30, 41, 59, 0.85);
-        }
-
-        .user-input::placeholder {
-            color: #64748b;
-            font-size: 0.95rem;
-        }
-
-        .btn-submit {
-            background: rgba(99, 102, 241, 0.2);
-            color: #e0e7ff;
-            border: 1px solid rgba(129, 140, 248, 0.5);
-            padding: 0.65rem 1.6rem;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 0.9rem;
+        h1, h2 {
             font-weight: 600;
-            transition: all 0.3s ease;
+            color: #2b3a32;
+            margin-bottom: 12px;
+            font-size: 1.4rem;
+            line-height: 1.3;
         }
 
-        .btn-submit:hover {
-            background: rgba(99, 102, 241, 0.4);
-            border-color: #818cf8;
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
-            transform: translateY(-2px);
+        p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
         }
 
-        /* Tanggapan Muncul di Tempat yang Sama */
-        .answer-reveal {
-            padding: 1.2rem;
-            background: rgba(168, 85, 247, 0.12);
-            border-radius: 20px;
-            border: 1px dashed rgba(192, 132, 252, 0.5);
-            color: #f3e8ff;
-            font-size: 1.05rem;
+        .letter-box {
+            background: #faf8f5;
+            border-left: 4px solid var(--primary);
+            padding: 18px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin-bottom: 20px;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
             font-weight: 500;
-            display: none;
-            line-height: 1.6;
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 0.88rem;
+            margin-bottom: 8px;
+            color: #4a5568;
         }
 
-        @keyframes popIn {
-            0% { transform: scale(0.9); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        /* HALAMAN 3: KARTU ANALOGI */
-        .filter-container {
-            display: flex;
-            gap: 0.6rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 2rem;
-        }
-
-        .filter-btn {
-            background: rgba(30, 41, 59, 0.6);
-            color: #94a3b8;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 0.55rem 1.2rem;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            background: #6366f1;
-            color: #fff;
-            border-color: #6366f1;
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 1.5rem;
+        input[type="text"], textarea {
             width: 100%;
-            margin-bottom: 2.5rem;
-        }
-
-        .card {
-            background-color: transparent;
-            perspective: 1000px;
-            height: 290px;
-            cursor: pointer;
-        }
-
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-style: preserve-3d;
-        }
-
-        .card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border-radius: 22px;
-            padding: 1.8rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .card-front {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            color: #e2e8f0;
-        }
-
-        .card-front h3 {
-            color: #a5b4fc;
-            margin-bottom: 0.8rem;
-            font-size: 1.15rem;
-        }
-
-        .card-front p {
-            font-style: italic;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #cbd5e1;
-        }
-
-        .card-front span {
-            margin-top: 1.2rem;
-            font-size: 0.8rem;
-            color: #64748b;
-        }
-
-        .card-back {
-            background: linear-gradient(135deg, #312e81 0%, #1e1b4b 100%);
-            color: #f1f5f9;
-            transform: rotateY(180deg);
-        }
-
-        .card-back p {
-            font-size: 0.92rem;
-            line-height: 1.6;
-        }
-
-        .card-back .tag {
-            margin-top: 1.2rem;
-            font-size: 0.75rem;
-            background: rgba(99, 102, 241, 0.5);
-            border: 1px solid rgba(129, 140, 248, 0.5);
-            padding: 0.3rem 0.8rem;
+            padding: 14px;
+            border: 1.5px solid var(--border-color);
             border-radius: 12px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s;
+            background: #fbfbfb;
         }
 
-        /* HALAMAN 4: RUANG CURHAT & CLOSING */
-        .curhat-section h3 {
-            color: #e0e7ff;
-            margin-top: 0.8rem;
-            margin-bottom: 0.8rem;
-            font-size: 1.5rem;
+        input[type="text"]:focus, textarea:focus {
+            border-color: var(--primary);
+            background: #fff;
         }
 
-        .curhat-section p {
-            color: #94a3b8;
-            font-size: 1.05rem;
-            margin-bottom: 2rem;
-            line-height: 1.7;
+        textarea {
+            resize: vertical;
+            min-height: 100px;
         }
 
-        .wa-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.7rem;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: white;
-            padding: 1rem 2.2rem;
-            border-radius: 40px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.05rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.35);
-            margin-bottom: 2.5rem;
+        .warning-text {
+            color: #e53e3e;
+            font-size: 0.8rem;
+            margin-top: 6px;
+            display: none;
         }
 
-        .wa-btn:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(34, 197, 94, 0.5);
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
         }
 
-        .closing-banner {
-            border-top: 1px dashed rgba(255, 255, 255, 0.15);
-            padding-top: 2rem;
-            color: #cbd5e1;
-            font-size: 1.05rem;
-            line-height: 1.8;
-            font-style: italic;
-            font-weight: 300;
-        }
-
-        /* Navigasi Utama Lanjut */
-        .page-action-btn {
-            margin-top: 1.5rem;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        button {
+            flex: 1;
+            background-color: var(--primary);
             color: white;
             border: none;
-            padding: 0.85rem 2rem;
-            border-radius: 40px;
-            font-size: 1rem;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.35);
+            transition: background 0.3s, transform 0.1s;
         }
 
-        .page-action-btn:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(168, 85, 247, 0.5);
+        button:hover {
+            background-color: var(--primary-hover);
         }
 
-        /* Progress Dots */
-        .progress-dots {
-            position: fixed;
-            bottom: 2rem;
-            z-index: 10;
-            display: flex;
-            gap: 0.8rem;
-            background: rgba(15, 23, 42, 0.6);
-            padding: 0.6rem 1.2rem;
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
+        button:active {
+            transform: scale(0.98);
         }
 
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transition: all 0.4s ease;
+        button.secondary {
+            background-color: #edf2f7;
+            color: #4a5568;
         }
 
-        .dot.active {
-            background: #818cf8;
-            width: 24px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(129, 140, 248, 0.8);
+        button.secondary:hover {
+            background-color: #e2e8f0;
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
         }
     </style>
 </head>
 <body>
 
-    <div class="ambient-glow glow-1"></div>
-    <div class="ambient-glow glow-2"></div>
-    <canvas id="particleCanvas"></canvas>
-
-    <!-- Header Logo -->
-    <header>
-        <div class="logo">Ruang Teduh</div>
-    </header>
-
-    <main>
-
-        <!-- HALAMAN 1: SAMBUTAN -->
-        <section class="page active" id="page-welcome">
-            <div class="glass-card welcome-card">
-                <h1>Selamat Datang</h1>
-                <p>Halo, makasih ya udah bertahan sampai saat ini. Kamu bukan lemah kok, kamu kuat karena bisa sampe saat ini.</p>
-                <p>Dan aku tau kamu juga kok, kalo kadang saat kamu sama orang lain maka kamu harus selalu kuat dan ketika kamu sendiri maka kamu akan menangis kan? Hehe... Gak papa kok, nangis aja ya. Keluarkan apa yang selama ini kamu rasakan dan keluarkan apa yang selama ini kamu pendam. Di sini kamu aman kok.</p>
-
-                <button class="page-action-btn" onclick="goToPage(2)">
-                    Mulai Rehat Sejenak 🌸
-                </button>
-            </div>
-        </section>
-
-        <!-- HALAMAN 2: ISIAN PERTANYAAN INTERAKTIF -->
-        <section class="page" id="page-quiz">
-            <div class="glass-card">
-                <button class="btn-back-nav" onclick="goToPage(1)">← Kembali</button>
-
-                <h2 class="quiz-title">Sebelum lanjut, tuliskan sedikit apa yang lagi kamu rasakan...</h2>
-
-                <!-- Pertanyaan 1 -->
-                <div class="quiz-box active" id="quiz1">
-                    <div class="question-text">1. Menurutmu, apa hal paling manis atau hal kecil yang bikin kamu bersyukur hari ini?</div>
-                    <div class="interactive-area">
-                        <div class="input-container" id="inputWrap1">
-                            <textarea class="user-input" id="input1" placeholder="Tulis jawabanmu di sini..."></textarea>
-                            <button class="btn-submit" onclick="submitAnswer(1)">Kirim Jawaban ✍️</button>
-                        </div>
-                        <div class="answer-reveal" id="ans1"></div>
-                    </div>
-                    <button class="page-action-btn" id="next1" style="display:none;" onclick="nextQuiz(2)">
-                        Lanjut ke Pertanyaan 2 ➡️
-                    </button>
-                </div>
-
-                <!-- Pertanyaan 2 -->
-                <div class="quiz-box" id="quiz2">
-                    <div class="question-text">2. Kalau kamu punya kesempatan untuk memeluk dirimu sendiri saat ini, apa yang ingin kamu katakan padanya?</div>
-                    <div class="interactive-area">
-                        <div class="input-container" id="inputWrap2">
-                            <textarea class="user-input" id="input2" placeholder="Tulis di sini..."></textarea>
-                            <button class="btn-submit" onclick="submitAnswer(2)">Kirim Jawaban ✍️</button>
-                        </div>
-                        <div class="answer-reveal" id="ans2"></div>
-                    </div>
-                    <button class="page-action-btn" id="next2" style="display:none;" onclick="nextQuiz(3)">
-                        Lanjut ke Pertanyaan 3 ➡️
-                    </button>
-                </div>
-
-                <!-- Pertanyaan 3 -->
-                <div class="quiz-box" id="quiz3">
-                    <div class="question-text">3. Apa hal berat yang paling ingin kamu lepaskan atau istirahatkan hari ini?</div>
-                    <div class="interactive-area">
-                        <div class="input-container" id="inputWrap3">
-                            <textarea class="user-input" id="input3" placeholder="Tulis di sini..."></textarea>
-                            <button class="btn-submit" onclick="submitAnswer(3)">Kirim Jawaban ✍️</button>
-                        </div>
-                        <div class="answer-reveal" id="ans3"></div>
-                    </div>
-                    <button class="page-action-btn" id="next3" style="display:none;" onclick="goToPage(3)">
-                        Buka Kartu Analogi 📖
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- HALAMAN 3: KARTU ANALOGI -->
-        <section class="page" id="page-cards">
-            <button class="btn-back-nav" style="position: fixed; top: 2rem; left: 2rem;" onclick="goToPage(2)">← Kembali</button>
-
-            <div class="filter-container">
-                <button class="filter-btn active" onclick="filterCards('all', this)">Semua (15)</button>
-                <button class="filter-btn" onclick="filterCards('kesepian', this)">Kesepian</button>
-                <button class="filter-btn" onclick="filterCards('lelah', this)">Lelah</button>
-                <button class="filter-btn" onclick="filterCards('overthinking', this)">Overthinking</button>
-                <button class="filter-btn" onclick="filterCards('patah-hati', this)">Patah Hati</button>
+    <div class="container">
+        <!-- HALAMAN 1: Sambutan & Surat Pemilik -->
+        <div id="page-1" class="page active">
+            <h1>Ruang Teduh 🌸</h1>
+            <p>Tempat aman sejenak untuk meluruskan lelah dan merangkul diri sendiri di tengah bisingnya hari.</p>
+            
+            <div class="letter-box">
+                "Halo, makasih ya sudah mau singgah... Alasan aku menciptakan Ruang Teduh ini sederhana: aku ingin menjadi 'rumah' bagi siapapun yang merasa lelah dengan hiruk-pikuk dunia ini, dan menjadi tempat aman untuk kamu menumpahkan segala perasaan yang selama ini kamu simpan sendirian.<br><br>
+                Walaupun aku sendiri belum tentu selalu punya rumah untuk menumpahkan rasa lelahku, lewat tempat ini aku ingin merangkul kamu. Aku ingin kamu tahu kalau kamu tidak sendirian. Aku akan sangat bahagia jika keberadaan ruang kecil ini bisa sedikit meringankan beban yang sedang kamu pikul hari ini. Istirahatlah sejenak di sini ya..." <br><br>
+                <strong>— Danda (Pemilik Ruang)</strong>
             </div>
 
-            <div class="cards-grid" id="cardsGrid">
-                <!-- Kartu di-render via Javascript -->
+            <div class="form-group">
+                <label for="penname">Nama Samaran / Panggilan (Opsional):</label>
+                <input type="text" id="penname" placeholder="Misal: Si Kaki Lelah, Bintang Kecil, dll...">
+                <div id="name-warning" class="warning-text">Wah, nama samarannya kurang cocok nih. Yuk pilih nama lain yang lebih hangat ya 🌸</div>
             </div>
 
-            <div style="text-align: center;">
-                <button class="page-action-btn" onclick="goToPage(4)">
-                    Butuh Teman Cerita? 💬
-                </button>
+            <button onclick="nextPage(2)">Masuk ke Ruang Teduh</button>
+        </div>
+
+        <!-- HALAMAN 2: Pertanyaan 1 -->
+        <div id="page-2" class="page">
+            <h2>Pertanyaan 1 dari 3</h2>
+            <p>Seberapa berat hari yang kamu lewati hari ini? Ceritakan apa saja yang membuat pundakmu terasa lelah.</p>
+            <textarea id="ans-1" placeholder="Tuliskan di sini..."></textarea>
+            <div class="btn-group">
+                <button class="secondary" onclick="prevPage(1)">Kembali</button>
+                <button onclick="validateAndNext(3, 'ans-1')">Lanjut</button>
             </div>
-        </section>
+        </div>
 
-        <!-- HALAMAN 4: RUANG CURHAT & PENUTUP -->
-        <section class="page" id="page-curhat">
-            <div class="glass-card curhat-section">
-                <button class="btn-back-nav" onclick="goToPage(3)">← Kembali</button>
-
-                <h3>Masih Butuh Teman Cerita Langsung?</h3>
-                <p>Kadang yang kita butuhkan bukan cuma tulisan, tapi seseorang yang mau mendengarkan tanpa menghakimi. Silakan sapa lewat pesan.</p>
-                
-                <!-- Ganti nomor WhatsApp milikmu -->
-                <a href="https://wa.me/628xxxxxxxxxx?text=Halo%2C%20aku%20lagi%20butuh%20tempat%20cerita..." target="_blank" class="wa-btn">
-                    💬 Cerita via WhatsApp
-                </a>
-
-                <div class="closing-banner">
-                    "Udah tenang kan sekarang? Ingat ya kamu itu kuat dan jangan mikir yang enggak-engggak soal apa yang kamu rasain sekarang yaa, itu wajar kok. Tetap tersenyum yaa dan kalo masih butuh tempat curhat datang aja kesini yaa."
-                </div>
+        <!-- HALAMAN 3: Pertanyaan 2 -->
+        <div id="page-3" class="page">
+            <h2>Pertanyaan 2 dari 3</h2>
+            <p>Adakah hal kecil atau sederhana yang sempat membuatmu merasa sedikit lega atau tersenyum hari ini?</p>
+            <textarea id="ans-2" placeholder="Tuliskan sekecil apapun itu..."></textarea>
+            <div class="btn-group">
+                <button class="secondary" onclick="prevPage(2)">Kembali</button>
+                <button onclick="validateAndNext(4, 'ans-2')">Lanjut</button>
             </div>
-        </section>
+        </div>
 
-    </main>
+        <!-- HALAMAN 4: Pertanyaan 3 -->
+        <div id="page-4" class="page">
+            <h2>Pertanyaan 3 dari 3</h2>
+            <p>Jika kamu bisa memeluk dirimu sendiri saat ini, apa kalimat pertama yang ingin kamu bisikkan?</p>
+            <textarea id="ans-3" placeholder="Bisikkan untuk dirimu sendiri..."></textarea>
+            <div class="btn-group">
+                <button class="secondary" onclick="prevPage(3)">Kembali</button>
+                <button onclick="submitData()">Kirim Jawaban</button>
+            </div>
+        </div>
 
-    <!-- Indikator Progres Halaman -->
-    <div class="progress-dots">
-        <div class="dot active" id="dot1"></div>
-        <div class="dot" id="dot2"></div>
-        <div class="dot" id="dot3"></div>
-        <div class="dot" id="dot4"></div>
+        <!-- HALAMAN 5: Penutup / Selesai -->
+        <div id="page-5" class="page" style="text-align: center;">
+            <div class="success-icon">🍵</div>
+            <h1>Terima Kasih Telah Bertahan</h1>
+            <p>Jawabanmu sudah tersimpan aman di Ruang Teduh. Kamu sudah berjuang sangat hebat hari ini. Silakan istirahat dengan tenang ya.</p>
+            <button onclick="location.reload()">Kembali ke Awal</button>
+        </div>
     </div>
 
-    <script>
-        // Pindah Halaman Runtut
-        function goToPage(pageNumber) {
-            const pages = ['page-welcome', 'page-quiz', 'page-cards', 'page-curhat'];
+    <!-- Firebase SDK (Modular Version) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Konfigurasi Firebase milikmu (sudah terhubung ke ruang-teduh-db)
+        const firebaseConfig = {
+            apiKey: "AIzaSyB80ta-pCOjSVdmbQwegsTOqWUhitbMm-M",
+            authDomain: "ruang-teduh-db.firebaseapp.com",
+            projectId: "ruang-teduh-db",
+            storageBucket: "ruang-teduh-db.firebasestorage.app",
+            messagingSenderId: "1051319570535",
+            appId: "1:1051319570535:web:6af520d3151f16f9a6c4c2"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Daftar kata terlarang sederhana untuk filter nama samaran
+        const badWords = ["anjing", "babi", "kontol", "memek", "asu", "ngentot", "kampang"];
+
+        window.checkPenname = function() {
+            let nameInput = document.getElementById('penname').value.toLowerCase().trim();
+            let warning = document.getElementById('name-warning');
             
-            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-            document.querySelectorAll('.dot').forEach(dot => dot.classList.remove('active'));
-
-            document.getElementById(pages[pageNumber - 1]).classList.add('active');
-            document.getElementById(`dot${pageNumber}`).classList.add('active');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            for (let word of badWords) {
+                if (nameInput.includes(word)) {
+                    warning.style.display = 'block';
+                    return false;
+                }
+            }
+            warning.style.display = 'none';
+            return true;
         }
 
-        // Fungsi Submit Jawaban Ketik Bebas
-        function submitAnswer(step) {
-            const inputVal = document.getElementById(`input${step}`).value.trim();
-            const inputWrap = document.getElementById(`inputWrap${step}`);
-            const revealBox = document.getElementById(`ans${step}`);
-            const nextBtn = document.getElementById(`next${step}`);
+        window.nextPage = function(pageNo) {
+            if (pageNo === 2) {
+                if (!window.checkPenname()) return;
+            }
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageNo).classList.add('active');
+            window.scrollTo(0, 0);
+        }
 
-            if (inputVal === '') {
-                alert('Tuliskan sedikit saja apa yang ada di pikiranmu yaa...');
+        window.prevPage = function(pageNo) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageNo).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        window.validateAndNext = function(nextNo, inputId) {
+            let val = document.getElementById(inputId).value.trim();
+            if (val === "") {
+                alert("Isi sebentar ya, biar hatinya agak lebih lega :)");
+                return;
+            }
+            window.nextPage(nextNo);
+        }
+
+        window.submitData = async function() {
+            let val3 = document.getElementById('ans-3').value.trim();
+            if (val3 === "") {
+                alert("Isi sebentar ya sebelum dikirim :)");
                 return;
             }
 
-            if (step === 1) {
-                revealBox.innerHTML = `Terima kasih sudah mau berbagi. Apapun itu, sekecil apa pun hal manis yang kamu tuliskan, semoga itu jadi alasan kecil untukmu tersenyum hari ini ✨`;
-            } else if (step === 2) {
-                revealBox.innerHTML = `Terima kasih sudah jujur pada dirimu sendiri. Kalimat itu pantas kamu dengarkan. Kamu sudah berusaha sangat keras sejauh ini 🤍`;
-            } else if (step === 3) {
-                revealBox.innerHTML = `Napas pelan-pelan ya... Tarik napas, buang. Lepaskan sejenak beban itu di sini. Kamu aman di Ruang Teduh ini ✨`;
-            }
+            let penname = document.getElementById('penname').value.trim();
+            if (penname === "") penname = "Tanpa Nama";
 
-            inputWrap.style.display = 'none';
-            revealBox.style.display = 'block';
-            nextBtn.style.display = 'inline-block';
-        }
+            let ans1 = document.getElementById('ans-1').value;
+            let ans2 = document.getElementById('ans-2').value;
 
-        function nextQuiz(nextStep) {
-            document.querySelectorAll('.quiz-box').forEach(box => box.classList.remove('active'));
-            document.getElementById(`quiz${nextStep}`).classList.add('active');
-        }
-
-        // Data Analogi Lengkap (15 Kartu)
-        const analogies = [
-            {
-                category: "kesepian",
-                title: "Teman yang Tak Pernah Tidur",
-                analogy: "Di malam hari kamu selalu merasa kesepian, hingga kamu lupa kalau Tuhan selalu ada di sampingmu.",
-                meaning: "Dalam sunyi yang paling senyap sekalipun, kamu tidak pernah benar-benar sendirian. Ada pelukan tak kasat mata yang selalu siap mendengar setiap keluh kesahmu."
-            },
-            {
-                category: "kesepian",
-                title: "Bintang di Langit Malam",
-                analogy: "Bintang-bintang di langit tidak pernah bersuara, tetapi mereka selalu ada menyinari kegelapan bersama-sama dari kejauhan.",
-                meaning: "Meski terkadang terasa tak ada suara yang menyapa, ada doa-doa dan perhatian yang tak terlihat yang selalu mengelilingimu."
-            },
-            {
-                category: "kesepian",
-                title: "Ketenangan di Balik Malam",
-                analogy: "Terkadang, gelap bukan berarti seram. Karena ada saatnya kita justru membutuhkan gelap itu untuk berhenti sejenak.",
-                meaning: "Matahari tidak bisa bersinar terus-menerus; bumi pun butuh malam untuk beristirahat. Jangan takut pada sunyi dan gelapnya lelahmu."
-            },
-            {
-                category: "lelah",
-                title: "Pondasi yang Kehilangan Tiang",
-                analogy: "Tiang adalah penopang utama sebuah rumah. Jika tiangnya hancur, maka perlahan seluruh bagian rumah itu akan ikut roboh.",
-                meaning: "Kamu adalah tiang bagi dirimu sendiri. Jangan terus-menerus memaksakan diri menopang beban berat sendirian tanpa merawat jiwamu."
-            },
-            {
-                category: "lelah",
-                title: "Baterai HP 1%",
-                analogy: "Kamu merasa seperti ponsel dengan baterai 1% yang dipaksa membuka aplikasi berat.",
-                meaning: "Mengambil jeda bukan berarti kamu kalah. Mesin yang hebat pun butuh dimatikan sejenak agar tidak terbakar. Istirahatlah."
-            },
-            {
-                category: "lelah",
-                title: "Awan Tebal & Hujan",
-                analogy: "Awan tidak pernah meminta untuk menjadi gelap, ia hanya menampung terlalu banyak air hingga tak sanggup lagi menahannya.",
-                meaning: "Menangis atau merasa lelah bukan tanda kamu lemah. Itu cuma cara alamiah tubuh dan jiwamu melepaskan beban yang berat."
-            },
-            {
-                category: "lelah",
-                title: "Kekuatan Sebuah Tembok",
-                analogy: "Tembok yang kuat tercipta dari campuran semen yang benar. Karena jika takarannya kurang, tembok itu tidak akan pernah bertahan lama.",
-                meaning: "Jangan terburu-buru menuntut dirimu untuk selalu kuat. Proses pemulihan dan air mata yang kamu keluarkan saat ini adalah 'campuran' ketahanan jiwamu."
-            },
-            {
-                category: "lelah",
-                title: "Langkah Kecil yang Berputar",
-                analogy: "Sebuah kendaraan tidak akan bisa bergerak tanpa adanya roda.",
-                meaning: "Impian dan niat baikmu tidak akan mengubah apa pun tanpa adanya langkah kecil yang nyata. Fokus saja memutar rodamu satu demi satu langkah hari ini."
-            },
-            {
-                category: "overthinking",
-                title: "Semua Lampu Menyala",
-                analogy: "Pikiranmu saat overthinking seperti menyalakan seluruh lampu di rumah secara bersamaan, padahal kamu hanya butuh satu lampu tidur.",
-                meaning: "Tidak semua masalah di masa depan harus kamu selesaikan detik ini juga. Tenangkan kepalamu, fokus pada satu langkah kecil saja."
-            },
-            {
-                category: "overthinking",
-                title: "Spion Mobil",
-                analogy: "Kaca spion mobil dibuat jauh lebih kecil daripada kaca depan, karena kamu tidak bisa maju kalau terus-menerus menatap apa yang ada di belakang.",
-                meaning: "Masa lalu dan ketakutan masa depan cuma bayangan di spion. Fokus saja pada jalan kecil di depan matamu saat ini."
-            },
-            {
-                category: "overthinking",
-                title: "Sayap yang Harus Mengepak",
-                analogy: "Burung tidak akan pernah bisa terbang jika ia tidak berusaha untuk mengepakkan sayapnya.",
-                meaning: "Kamu punya potensi besar. Rasa takut dan ragu itu wajar, tapi keberanian baru akan lahir saat kamu mulai mencoba melangkah."
-            },
-            {
-                category: "patah-hati",
-                title: "Kaca yang Retak",
-                analogy: "Memaksa mempertahankan sesuatu yang sudah rusak itu seperti menggenggam pecahan kaca; semakin erat kamu genggam, semakin dalam tanganmu berdarah.",
-                meaning: "Melepaskan bukan berarti kamu melupakan. Terkadang, merelakan adalah cara terbaik untuk menyelamatkan dirimu sendiri."
-            },
-            {
-                category: "patah-hati",
-                title: "Halaman Buku yang Robek",
-                analogy: "Satu halaman yang rusak atau hilang tidak pernah menghancurkan seluruh isi buku.",
-                meaning: "Satu bab cerita yang menyakitkan bukan akhir dari kisah hidupmu. Masih banyak halaman kosong di depan yang menunggu untuk kamu tulis."
-            },
-            {
-                category: "patah-hati",
-                title: "Stasiun Perjalanan Kita",
-                analogy: "Tidak semua orang yang naik bersama dari stasiun pertama akan turun di stasiun keempat. Sebagian dari mereka memang hanya ditakdirkan menemani sebagian perjalananmu.",
-                meaning: "Kehilangan seseorang bukan berarti perjalananmu berhenti. Mereka yang turun mengajarkanmu arti singgah, sementara kamu harus terus melangkah."
-            },
-            {
-                category: "patah-hati",
-                title: "Indahnya Harapan Baru",
-                analogy: "Disaat hujan reda, maka muncul lah sebuah pelangi.",
-                meaning: "Kesedihan dan badai yang kamu lalui saat ini tidak akan berlangsung selamanya. Bersabarlah, karena setelah air mata usai, akan selalu ada pelangi yang menyambutmu."
-            }
-        ];
-
-        function renderCards(data) {
-            const grid = document.getElementById('cardsGrid');
-            grid.innerHTML = '';
-            
-            data.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.onclick = () => card.classList.toggle('flipped');
-
-                card.innerHTML = `
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <h3>${item.title}</h3>
-                            <p>"${item.analogy}"</p>
-                            <span>(Klik untuk balik kartu)</span>
-                        </div>
-                        <div class="card-back">
-                            <p>${item.meaning}</p>
-                            <span class="tag">#${item.category}</span>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function filterCards(category, btnEl) {
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            btnEl.classList.add('active');
-
-            if (category === 'all') {
-                renderCards(analogies);
-            } else {
-                const filtered = analogies.filter(item => item.category === category);
-                renderCards(filtered);
+            try {
+                // Simpan ke Firestore Database
+                await addDoc(collection(db, "refleksi"), {
+                    namaSamaran: penname,
+                    pertanyaan1: ans1,
+                    pertanyaan2: ans2,
+                    pertanyaan3: val3,
+                    waktuKirim: new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })
+                });
+                window.nextPage(5);
+            } catch (e) {
+                console.error("Gagal menyimpan: ", e);
+                alert("Maaf, terjadi sedikit kendala koneksi. Coba klik kirim sekali lagi ya.");
             }
         }
-
-        // Render awal
-        renderCards(analogies);
-
-        // Efek Partikel Background Canvas
-        const canvas = document.getElementById('particleCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 0.3;
-                this.speedY = (Math.random() - 0.5) * 0.3;
-                this.opacity = Math.random() * 0.5 + 0.2;
-            }
-
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-
-                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-            }
-
-            draw() {
-                ctx.fillStyle = `rgba(165, 180, 252, ${this.opacity})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        for (let i = 0; i < 50; i++) {
-            particles.push(new Particle());
-        }
-
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-            requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
     </script>
 </body>
 </html>
